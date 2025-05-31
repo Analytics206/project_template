@@ -1,7 +1,7 @@
-# [<img src="src/web-ui/public/images/drp_logo_blue.png" width="250"/>](src/web-ui/public/images/drp_logo_blue.png)
-🧠 Deep Research Pipeline  
+
+🧠 NEW PROJECT NAME
 ## Overview
-A modular, fully local, open-source pipeline for fetching, structuring, and exploring AI research papers from arXiv.org. This system enables offline graph-based and semantic search through an integrated architecture of MongoDB, Neo4j, and Qdrant using Hugging Face embeddings. All services run in Docker containers for easy, consistent local deployment.
+A modular, fully local, open-source 
 
 ## 🚀 Key Features
 | Feature                  | Description |
@@ -19,19 +19,11 @@ A modular, fully local, open-source pipeline for fetching, structuring, and expl
 
 ### Neo4j Graph Database
 
-![Image](https://github.com/user-attachments/assets/3233595b-ecbc-4029-a0f9-1e6723c026a7)
-### Dashboard reporting
-![alt text](<images/Screenshot 2025-05-09 013100.png>)
-### Qdrant Vector Database
-![alt text](<images/Screenshot 2025-05-09 012044.png>)
-### Qdrant Vector Database similarity search
-![alt text](<images/Screenshot 2025-05-09 010713.png>)
 ---
 
 ## 📦 System Components
 | Component                  | Purpose                                      |
 | -------------------------- | -------------------------------------------- |
-| **Ingestion Service**      | Fetches papers(metadata) using arXiv Atom XML API      |
 | **MongoDB**                | Stores normalized paper metadata and paper processing tracking    |
 | **Neo4j**                  | Stores the author-paper-category graph       |
 | **Qdrant**                 | Stores paper vector embeddings for semantic search with metrics tracking |
@@ -50,13 +42,6 @@ A modular, fully local, open-source pipeline for fetching, structuring, and expl
  - Fetch metadata of papers from arXiv.org using arXiv Atom XML API
  - Store normalized metadata in MongoDB with pdf_url for pdf download
  - Download PDFs from arXiv.org and store in local directory
- - Store the author-paper-category graph in Neo4j
- - Store vector embeddings for semantic search in Qdrant
- - Manage paper processing tracking in MongoDB
- - Dynamic configuration for paper category, paper limits, models, and pdf save directory
- - Web UI for interaction with graphs
- - Jupyter notebook for interactive analysis
- - Tracks events, errors, and skipped entries  
 
 For more deep dive into project and status, see the `docs/` directory.
 
@@ -94,13 +79,6 @@ For more deep dive into project and status, see the `docs/` directory.
   ### This system runs on a single machine but recommend a multiple machine setup.*
   - System minimum requirements: 16GB RAM, 8GB GPU, 512GB SSD
   - Developer runs on laptop with 16GB RAM, 16GB GPU, 1TB SSD *Not recommended!
-  - Most components run in docker containers that can be move to own/shared docker machines
-  - Qdrant recommend setup on a separate machine with nvidia GPU for faster vector operations
-  - Default Qdrant running locally with out docker *see below Qdrant Setup*
-  - External storage for PDFs recommended *see below PDF Storage*
-  * pdf save directory is set to E:\AI Research\ in "config/default.yaml"
-  * edit config/default.yaml before running the pipelines
-  * Project works on both Windows and Ubuntu/Linux environments.
 
 ---
 
@@ -108,10 +86,7 @@ For more deep dive into project and status, see the `docs/` directory.
 - Git
 - Python 3.9+ (Python 3.11 recommended)
 - [UV](https://github.com/astral-sh/uv) (for fast Python dependency management)
-- [Ollama](https://ollama.ai/) (optional, for enhanced image analysis)
 - Docker and Docker Compose (for containerized deployment)
-- NVIDIA GPU with CUDA support (optional, for faster vector operations)
-- Prometheus and Grafana (included in docker-compose.monitoring.yml)
 
 ---
 
@@ -149,11 +124,7 @@ source .venv/bin/activate
    ```
  - ✔ Network arxiv_pipeline_default         Started     
  - ✔ Container arxiv_pipeline-neo4j-1       Started     
- - ✔ Container arxiv_pipeline-mongodb-1     Started 
- - ✔ Container arxiv_pipeline-qdrant-1      Started 
- - ✔ Container arxiv_pipeline-web-ui-1      Started   
- - ✔ Container arxiv_pipeline-api-1         Started   
- - ✔ Container arxiv_pipeline-app-1         Started 
+
 
 ## 2. Managing Pipeline Service Containers
    * pipelines do not have to run in order if you have previously run them or starting where you left off
@@ -170,30 +141,9 @@ source .venv/bin/activate
   ```
 
   ### b. Run sync-neo4j pipeline for new pdf metadata inserted from MongoDB:
-  ```bash
-   docker compose up --build sync-neo4j
-   or
-   echo $env:MONGO_URI
-   $env:MONGO_URI="mongodb://localhost:27017/config"
-   echo $env:MONGO_URI
-   python -m src.graph.sync_mongo_to_neo4j
-  ```
 
-   ### c. Run sync_qdrant pipeline to process downloaded PDFs and store as vector embeddings in Qdrant:
-   ```bash
-   docker compose up --build sync-qdrant
-   or *Need to uncomment docker-compose.yml sync-qdrant service????
-   python -m src.pipeline.sync_qdrant
-   ```
+  ### c. Run sync_qdrant pipeline to process downloaded PDFs and store as vector embeddings in Qdrant:
 
-   ### d. Run download_pdfs pipeline to download PDFs from arxiv.org using metadata stored in MongoDB:
-  * pdf download does not have a docker container
-   ```bash
-   echo $env:MONGO_URI
-   $env:MONGO_URI="mongodb://localhost:27017/config"
-   echo $env:MONGO_URI
-   python -m src.utils.download_pdfs
-   ```
 ## 3. (optional) Managing Monitoring Containers with Prometheus & Grafana
 a. **Start the monitoring stack:**
    ```bash
@@ -344,78 +294,32 @@ The ArXiv Pipeline includes an interactive Paper Analysis Dashboard that provide
 2. Click on "MongoDB Reports" in the navigation menu
 3. Use the filter options to refine your analysis
 
-![Paper Analysis Dashboard](<images/paper_analysis_dashboard.png>)
-
 ## 8. Data Validation and Analysis Utilities
 
 The ArXiv Pipeline includes comprehensive data validation and analysis utilities in `src/agents_core/logging_utils.py`. These utilities help ensure data quality, perform temporal analysis, and validate MongoDB collections.
 
 ### Paper Schema Validation
-```python
-from src.agents_core.logging_utils import validate_paper_schema
 
 # Validate a paper document
-is_valid, errors = validate_paper_schema(paper_document)
-if not is_valid:
-    print(f"Paper validation failed with errors: {errors}")
-```
 
 ### Temporal Analysis
 ```python
-from src.agents_core.logging_utils import count_papers_by_date
-from src.storage.mongo import MongoStorage
 
-# Connect to MongoDB
-with MongoStorage() as mongo:
-    # Count papers by year
-    yearly_counts = count_papers_by_date(mongo.papers, date_field="published", group_by="year")
-    
-    # Count papers by month
-    monthly_counts = count_papers_by_date(mongo.papers, date_field="published", group_by="month")
-    
-    # Count papers by day of week
-    weekday_counts = count_papers_by_date(mongo.papers, date_field="published", group_by="weekday")
 ```
 
 ### MongoDB Collection Analysis
 ```python
-from src.agents_core.logging_utils import analyze_mongodb_collection, validate_mongodb_data
-from src.storage.mongo import MongoStorage
 
-# Connect to MongoDB
-with MongoStorage() as mongo:
-    # Analyze collection structure
-    analysis = analyze_mongodb_collection(mongo.papers)
-    
-    # Validate collection data
-    validation_results = validate_mongodb_data(mongo.papers, validate_paper_schema)
 ```
 
 ### Data Integrity Checking
 ```python
-from src.agents_core.logging_utils import check_data_integrity
-from src.storage.mongo import MongoStorage
 
-# Connect to MongoDB
-with MongoStorage() as mongo:
-    # Check data integrity with date range
-    integrity_results = check_data_integrity(
-        mongo.papers, 
-        date_range=("2024-01-01T00:00:00Z", "2025-12-31T23:59:59Z")
-    )
 ```
 
 ### Formatted Reports
 ```python
-from src.agents_core.logging_utils import generate_date_distribution_report, count_papers_by_date
-from src.storage.mongo import MongoStorage
 
-# Connect to MongoDB
-with MongoStorage() as mongo:
-    # Generate monthly report
-    monthly_counts = count_papers_by_date(mongo.papers, group_by="month")
-    report = generate_date_distribution_report(monthly_counts, title="Monthly Paper Distribution")
-    print(report)
 ```
 
 These utilities help maintain data quality and provide insights into the ArXiv paper collection. They can be used for monitoring, debugging, and generating reports.
@@ -431,18 +335,6 @@ docker compose start mongodb
 
 # Start Neo4j
 docker compose start neo4j
-
-# Start Qdrant
-docker compose start qdrant
-
-# Start Web UI
-docker compose start web-ui
-
-# Start API
-docker compose start api
-
-# Start APP
-docker compose start app
 ```
 
 ### b. Restarting Individual Containers
@@ -456,32 +348,9 @@ docker compose restart mongodb
 
 docker compose restart neo4j
 
-# Restart Qdrant
-
-docker compose restart qdrant
-
-# Restart Web UI
-
-docker compose restart web-ui
-```
-
-### c. Viewing Container Logs
-
-```bash
-
 # View MongoDB logs
 
 docker compose logs mongodb
-
-# View Neo4j logs
-
-docker compose logs neo4j
-
-# View Qdrant logs
-
-docker compose logs qdrant
-
-# View Web UI logs
 
 docker compose logs web-ui
 
@@ -500,7 +369,6 @@ docker compose ps
 
 # Detailed information about a specific container
 
-docker inspect arxiv_pipeline-mongodb-1
 ```
 
 ## 6. Optional: GPU-Accelerated Qdrant Setup on Remote Windows Machine
@@ -519,7 +387,6 @@ a. **Hardware Requirements**:
    - 16GB RAM (32GB recommended)
    - IP address on your local network
 
-
 b. **Setup Approach**:
 
    - Install WSL2 with Ubuntu
@@ -531,7 +398,7 @@ b. **Setup Approach**:
    - Configure for optimal performance with research paper embeddings
 
 
-c. **Integration with ArXiv Pipeline**:
+c. **Integration with NEW PROJECT NAME**:
 
    - After setup, update the Qdrant connection settings in your config/default.yaml
 
@@ -542,11 +409,6 @@ c. **Integration with ArXiv Pipeline**:
 * Complete step-by-step instructions are available in the `qdrant_setup` directory:
 
 ```bash
-
-# View the detailed setup guide
-
-cat qdrant_setup/README.md
-
 ```
 
 #### The guide includes:
@@ -581,13 +443,9 @@ qdrant:
 
 * **New Feature:** The sync_qdrant pipeline now includes **MongoDB tracking** to prevent duplicate processing of PDFs. Each processed PDF is recorded in the `vector_processed_pdfs` collection with metadata including file hash, processing date, and chunk count.
 
-
-
 ---
 
 ### Configuration
-
-![Image](https://github.com/user-attachments/assets/7d68b38e-b4a1-49d9-acf4-17b74fb05e22)
 
 The application is configured using YAML files in the `config/` directory. The default configuration is in `config/default.yaml`.
 
@@ -618,14 +476,7 @@ qdrant:
 ```
 
 ### This system:
-
-- Tracks each processed PDF in a MongoDB collection
-
-- Prevents duplicate processing of the same document
-
-- Stores metadata including file hash, processing date, and chunk count
-
-- Maintains consistency between MongoDB tracking and Qdrant vector storage
+- 
 
 ### 2. GPU Acceleration for Vector Operations
 
@@ -682,56 +533,15 @@ If you change your PDF storage location, make sure to update both:
 2. The volume mapping in `docker-compose.yml` (for Docker runs)
    ## sync_mongodb pipeline
 
-   - arxiv.categories: Research categories to fetch papers from api into mongodb
-
-   - arxiv.max_results: Number of papers to fetch per API call
-
-   - arxiv.rate_limit_seconds: Number of seconds to wait between API calls
-
-   - arxiv.max_iterations: Number of API calls per category
-
-   - arxiv.start_date: Only process papers published after this date
-
-   - arxiv.end_date: Only process papers published before this date
-
-
+   - 
 
    ## sync_neo4j pipeline
 
-   - arxiv.process_categories: Categories to prioritize for vector storage into qdrant
-
-   - arxiv.max_papers: Maximum number of papers to process
-
-   - arxiv.max_papers_per_category: Maximum number of papers to insert per category
-
-   - arxiv.sort_by: Sort papers by this field
-
-   - arxiv.sort_order: Sort papers in this order
-
-
+   - 
 
    ## sync_qdrant pipeline
 
-   - arxiv.max_papers: Maximum number of papers to process
-
-   - arxiv.max_papers_per_category: Maximum number of papers to insert per category
-
-   - arxiv.sort_by: Sort papers by this field
-
-   - arxiv.sort_order: Sort papers in this order
-
-
-
-   ## download_pdfs pipeline
-
-   - arxiv.max_papers: Maximum number of papers to process
-
-   - arxiv.max_papers_per_category: Maximum number of papers to download per category
-
-   - arxiv.sort_by: Sort papers by this field
-
-   - arxiv.sort_order: Sort papers in this order
-
+   - 
 
 Config changes take effect when services are restarted. See `docs/system_design.md` for detailed information about configuration impact on system behavior.
 
@@ -855,13 +665,7 @@ The Docker setup includes MongoDB, so no additional installation is needed if us
 4. **Test your connection**:
 
    ```python
-   from neo4j import GraphDatabase
-   uri = "bolt://localhost:7687"
-   driver = GraphDatabase.driver(uri, auth=("neo4j", "password"))
-   with driver.session() as session:
-       result = session.run("MATCH (n) RETURN count(n) AS count")
-       print(result.single()["count"])
-   driver.close()
+
    ```
 
 ---
@@ -939,60 +743,18 @@ The following features are 'planned' for future development to enhance the resea
 ## To-Do List
 - [ ] **Short-term Tasks**
   - [ ] Optimize PDF download with parallel processing
-  - [ ] Add citation extraction from PDF full text
-  - [ ] Implement paper similarity metrics
-  - [ ] Create basic analytics dashboard
-  - [ ] Develop basic PDF section parser to extract abstracts and conclusions
-  - [ ] Add web admin interface for configuration and running pipelines
 
 - [ ] **Medium-term Tasks**
   - [ ] Fine-tuning pipelines for specific use cases
-  - [ ] Add research agent for specific use cases
-  - [ ] Extend Neo4j schema to include citations between papers
-  - [ ] Add full-text search capabilities
-  - [ ] Implement comprehensive citation parsing system
-  - [x] Create example Jupyter notebooks for research workflows
-  - [ ] Develop mathematical formula extraction and indexing
-  - [ ] Implement automated paper summarization
-  - [ ] Set up scheduled runs for continuous updates
 
 - [ ] **Long-term Tasks**
   - [ ] Build a recommendation system for related papers
-  - [ ] Develop a natural language query interface
-  - [ ] Create a researcher profile system
-  - [ ] Add support for other research paper repositories (e.g., PubMed, IEEE)
 
 - [ ] **Infrastructure Tasks**
   - [x] Add Prometheus/Grafana for monitoring
-  - [ ] Implement automated testing
-  - [ ] Set up CI/CD pipeline for continuous deployment
-  - [ ] Optimize vector storage for large-scale collections
----
-
-## ArXiv API Address to fetch papers metadata
-
-http://export.arxiv.org/api/query
-
-List used is in config/defaults.yaml for reference, more categories available. 
 
 ---
 
-- cs.AI - Artificial Intelligence
-- cs.CL - Computation and Language
-- cs.CV - Computer Vision and Pattern Recognition
-- cs.DS - Data Structures and Algorithms
-- cs.GT - Computer Science and Game Theory
-- cs.LG - Machine Learning
-- cs.LO - Logic in Computer Science
-- cs.MA - Multiagent Systems
-- cs.NA - Numerical Analysis
-- cs.NE - Neural and Evolutionary Computing
-- math.PR - Probability
-- q-bio.NC - Neurons and Cognition
-- stat - Statistics
-- stat.ML - Machine Learning
-- stat.TH - Statistics Theory
-- physics.data-an - Data Analysis, Statistics and Probability
 ---
 For more details about project and status, see the `docs/` directory.
 

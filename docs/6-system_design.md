@@ -1,4 +1,4 @@
-# ArXiv Pipeline System Design
+# NEW PROJECT NAME
 
 ## Overview
 
@@ -29,9 +29,7 @@ Unlike the Business Requirements Document (BRD) and Product Requirements Documen
 | Feature | Description | Implementation Date |
 |---------|-------------|---------------------|
 | Category-Based PDF Storage | PDFs are automatically organized in subdirectories by primary arXiv category | May 3, 2025 |
-| Paper Limit Per Category | Configurable limit on number of papers to download per category | May 3, 2025 |
-| Incremental Download Tracking | Download limits apply only to newly downloaded papers | May 3, 2025 |
-| Automatic Directory Creation | System automatically creates directory structures as needed | May 3, 2025 |
+
 
 ### Database Integration
 
@@ -40,17 +38,6 @@ Unlike the Business Requirements Document (BRD) and Product Requirements Documen
 | MongoDB Storage | Paper metadata stored in MongoDB | Initial |
 | Neo4j Graph Database | Paper relationships represented in Neo4j | Initial |
 | Qdrant Vector Database | Paper content vectorized and stored in Qdrant | Initial |
-| Selective Vector Processing | Only specific categories are processed into vector database | May 3, 2025 |
-| Vector PDF Processing Tracking | MongoDB-based tracking in vector_processed_pdfs collection to prevent duplicate vector processing | May 4, 2025 |
-| Qdrant-MongoDB Sync | Synchronization between Qdrant contents and MongoDB tracking | May 4, 2025 |
-| GPU Acceleration | Support for GPU-accelerated vector operations in Qdrant and embeddings | May 4, 2025 |
-| Multi-GPU Support | Configurable GPU device selection for performance optimization | May 4, 2025 |
-| Remote Qdrant with GPU | WSL2-based GPU-accelerated Qdrant on separate Windows machine | May 4, 2025 |
-| Native Rust Compilation | Optimized Qdrant performance through direct CUDA-enabled compilation | May 4, 2025 |
-| External Ollama Deployment | Standalone Docker setup for Ollama on separate machines | May 7, 2025 |
-| External MongoDB Deployment | Standalone Docker setup for MongoDB with persistent storage | May 7, 2025 |
-| External Neo4j Deployment | Standalone Docker setup for Neo4j graph database | May 7, 2025 |
-| Enhanced Qdrant GPU Setup | Updated Docker configuration for GPU-accelerated Qdrant | May 7, 2025 |
 
 ### System Monitoring
 
@@ -68,9 +55,6 @@ Unlike the Business Requirements Document (BRD) and Product Requirements Documen
 
 | Feature | Description | Implementation Date |
 |---------|-------------|---------------------|
-| ArXiv Ingestion | Fetches metadata from ArXiv API | Initial |
-| PDF Downloader | Downloads PDFs based on database records | Initial |
-| PDF Processor | Extracts and processes PDF content for vector database | Initial |
 | Neo4j Synchronizer | Synchronizes MongoDB data to Neo4j graph | Initial |
 | Web UI | Browser-based interface for exploring data | Initial |
 
@@ -101,11 +85,7 @@ The system supports both direct script execution and module-based execution patt
 
 ### PDF Processing Flow
 
-1. ArXiv API → MongoDB (metadata storage)
-2. MongoDB → Local PDF Storage (organized by category)
-3. Local PDFs → Qdrant Vector DB (selective by category)
-4. MongoDB → Neo4j (graph relationships)
-
+1. 
 ## Monitoring Architecture
 
 The monitoring system follows a sidecar pattern with the following components:
@@ -126,12 +106,10 @@ The monitoring system follows a sidecar pattern with the following components:
    - MongoDB Exporter: Database performance metrics
 
 4. **Application Metrics**: Custom instrumentation points
-   - Papers processed counter
    - Processing time measurements
    - Success/failure rate tracking
 
 ## Future Design Considerations
-
 - Asynchronous processing pipeline
 - Event-driven architecture for better component decoupling
 - Improved error handling and retry mechanisms

@@ -1,4 +1,4 @@
-# ArXiv Pipeline Development Notes
+# NEW PROJECT NAME Development Notes
 
 ## This document contains developer notes and reminders for ongoing work on the ArXiv pipeline project.
 

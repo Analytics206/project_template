@@ -46,14 +46,13 @@ The ArXiv Research Pipeline is built on a microservices architecture using Docke
 - **Prometheus Client**: Python library for custom application metrics
 
 ### Ingestion Layer
-- **ArXiv API**: HTTP-based Atom XML API for research paper retrieval
 - **Requests**: HTTP client library
 - **ElementTree**: XML parsing for ArXiv response data
 - **Rate limiting**: Configurable throttling to respect API constraints
 
 ### Data Storage Layer
 - **MongoDB**: NoSQL document database for paper metadata storage
-  - Collections: papers, authors, categories
+  - Collections: 
   - Indexes for efficient querying
   - Deployment options:
     - Docker container: Standard deployment within main pipeline
@@ -62,8 +61,8 @@ The ArXiv Research Pipeline is built on a microservices architecture using Docke
 
 ### Graph Representation
 - **Neo4j**: Graph database for representing paper-author-category relationships
-  - Nodes: Papers, Authors, Categories 
-  - Relationships: AUTHORED, BELONGS_TO
+  - Nodes: 
+  - Relationships: 
   - Cypher query language
   - Deployment options:
     - Docker container: Standard deployment within main pipeline
@@ -239,27 +238,13 @@ The system supports four deployment architectures:
 
 ### MongoDB Collections
 - **papers**: Research paper metadata
-  - id: ArXiv ID
-  - title: Paper title
-  - summary: Abstract
-  - authors: Array of author names
-  - categories: Array of category codes
-  - published: Publication date
-  - pdf_url: URL to PDF file
-  - vector_id: Reference to vector embedding (if processed)
+  - id: 
 - **vector_processed_pdfs**: PDF processing tracking for Qdrant vector storage
-  - file_id: Unique identifier for the PDF file
-  - file_path: Full path to the PDF file
-  - category: Research category of the paper
-  - file_hash: SHA-256 hash of the file content
-  - chunk_count: Number of text chunks created for vector storage
-  - processed_date: Timestamp of processing
+  - file_id: 
 
 ### Neo4j Graph Model
 - **Nodes**:
   - :Paper (id, title, summary, published, pdf_url)
-  - :Author (name)
-  - :Category (code, description)
 - **Relationships**:
   - (:Author)-[:AUTHORED]->(:Paper)
   - (:Paper)-[:BELONGS_TO]->(:Category)
@@ -269,7 +254,6 @@ The system supports four deployment architectures:
   - Vector dimension: Model-dependent (768 default)
   - Metadata: paper_id, title
   - Distance metric: Cosine similarity
-  - Source: PDF text content
 
 - **papers_summary**:
   - Vector dimension: Model-dependent (768 default)
