@@ -751,7 +751,7 @@ The following features are 'planned' for future development to enhance the resea
   - [ ] Build a recommendation system for related papers
 
 - [ ] **Infrastructure Tasks**
-  - [x] Add Prometheus/Grafana for monitoring
+  - [ ] Add Prometheus/Grafana for monitoring
 
 ---
 
