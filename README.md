@@ -41,45 +41,32 @@ A modular, fully local, open-source
 ## 🧵 High Level Overview
  - Fetch metadata of papers from arXiv.org using arXiv Atom XML API
  - Store normalized metadata in MongoDB with pdf_url for pdf download
- - Download PDFs from arXiv.org and store in local directory
 
 For more deep dive into project and status, see the `docs/` directory.
 
 ---
-
 ## 💡 Use Cases
 ### Research & Knowledge Management
-- **Build Personal Research Libraries**: Create customized collections of AI papers organized by category and relevance
 - **Offline Semantic Paper Search**: Find relevant papers without relying on online search engines
 - **Research Gap Identification**: Analyze research areas to identify unexplored topics and opportunities
-- **Literature Review Automation**: Quickly build comprehensive literature reviews for specific research questions
 
 ### Data Science & Analysis
 - **Research Trend Analysis**: Apply time-series analysis to identify emerging and declining research topics
 - **Citation Impact Visualization**: Build network graphs to identify the most influential papers and authors
-- **Cross-Domain Knowledge Transfer**: Discover applications of techniques across different research domains
-- **Research Benchmarking**: Track performance improvements in specific algorithms or methods over time
 
 ### AI-Assisted Research
 - **Paper Summarization**: Generate concise summaries of complex research papers
-- **Similar Papers Discovery**: Use vector similarity to find related work not linked by citations
-- **Research Idea Generation**: Use paper combinations with LLMs to explore novel research directions
-- **Algorithm Implementation Assistance**: Extract mathematical models for implementation in your own projects
 - **Research Agent**: Add specific research agents for specific use cases
 - **Fine-tuning**: Fine-tune pipelines for specific use cases
 
 ### Education & Learning
 - **Personalized Learning Paths**: Create sequential reading lists for specific AI topics
 - **Concept Visualization**: Extract and visualize key concepts across multiple papers
-- **Interactive Research Exploration**: Navigate research spaces through concept and citation graphs
-- **Teaching Material Preparation**: Curate papers and extract examples for courses and tutorials
 ---
-
 # 🛠️ Setup Instructions
   ### This system runs on a single machine but recommend a multiple machine setup.*
   - System minimum requirements: 16GB RAM, 8GB GPU, 512GB SSD
   - Developer runs on laptop with 16GB RAM, 16GB GPU, 1TB SSD *Not recommended!
-
 ---
 
 # ⚠️ Prerequisites
@@ -128,7 +115,6 @@ source .venv/bin/activate
 
 ## 2. Managing Pipeline Service Containers
    * pipelines do not have to run in order if you have previously run them or starting where you left off
-   * recommended to run them in order for processing new papers
    * manual services (Jupyter, Kafka, etc.) are only started when needed with the `--profile manual` flag
   ### a. Run sync_mongodb pipeline to fetch papers from ArXiv API and store in MongoDB:
   ```bash
@@ -247,7 +233,6 @@ qdrant:
 # The database dashboard displays the following Qdrant metrics:
 # - Papers: Number of vector embeddings stored in Qdrant (paper count)
 # - Authors: Vector dimensions (typically 768 for research paper embeddings)
-# - Categories: Number of collections in Qdrant
   vector_size: 768  # For all-MiniLM-L6-v2 model
 ```
 ## 6. Web UI
@@ -286,8 +271,6 @@ The ArXiv Pipeline includes an interactive Paper Analysis Dashboard that provide
 - **Time-based Analysis**: View paper publication trends by year, month, or day
 - **Multi-dimensional Filtering**: Filter papers by date range, specific year, and research category
 - **Dynamic Category Selection**: Choose from the top 50 research categories in your collection
-- **Interactive Charts**: Toggle between different time granularities with responsive visualizations
-- **Formatted Metrics**: Clear display of total papers with proper numerical formatting
 
 **How to Access:**
 1. Navigate to the web UI (http://localhost:3000) when services are running
@@ -296,21 +279,7 @@ The ArXiv Pipeline includes an interactive Paper Analysis Dashboard that provide
 
 ## 8. Data Validation and Analysis Utilities
 
-The ArXiv Pipeline includes comprehensive data validation and analysis utilities in `src/agents_core/logging_utils.py`. These utilities help ensure data quality, perform temporal analysis, and validate MongoDB collections.
-
-### Paper Schema Validation
-
-# Validate a paper document
-
-### Temporal Analysis
-```python
-
-```
-
-### MongoDB Collection Analysis
-```python
-
-```
+The NEW PROJECT NAME includes comprehensive data validation and analysis utilities in `src/agents_core/logging_utils.py`. These utilities help ensure data quality, perform temporal analysis, and validate MongoDB collections.
 
 ### Data Integrity Checking
 ```python
@@ -375,52 +344,37 @@ docker compose ps
 
 * For enhanced vector search performance, you can set up Qdrant with GPU acceleration on a separate Windows machine within the same network. This configuration is beneficial for:
 - Processing large volumes of papers with faster embedding searches
-- Leveraging dedicated GPU resources for vector operations
-- Scaling the vector database independently from other components
 
 ### Quick Overview
 
 a. **Hardware Requirements**:
-
    - Windows 11 with WSL2 enabled
    - NVIDIA GPU with CUDA 12.x support (8GB VRAM minimum)
    - 16GB RAM (32GB recommended)
    - IP address on your local network
 
 b. **Setup Approach**:
-
    - Install WSL2 with Ubuntu
-
    - Configure CUDA in WSL2
-
    - Build Qdrant from source with GPU support
-
    - Configure for optimal performance with research paper embeddings
 
 
 c. **Integration with NEW PROJECT NAME**:
-
    - After setup, update the Qdrant connection settings in your config/default.yaml
-
    - Run the pipeline as usual, with vector operations now GPU-accelerated
 
 ### Detailed Instructions
-
 * Complete step-by-step instructions are available in the `qdrant_setup` directory:
 
 ```bash
 ```
 
 #### The guide includes:
-
 - Full installation procedures
-
 - Configuration optimized for 768-dimensional embeddings (typical for research papers)
-
 - Testing and benchmarking tools
-
 - Maintenance and backup procedures
-
 - Security recommendations
 
 ## Updating Configuration
@@ -432,11 +386,8 @@ c. **Integration with NEW PROJECT NAME**:
 # In config/default.yaml
 
 qdrant:
-
   host: "192.168.1.x"  # Replace with your Qdrant server's IP
-
   port: 6333
-
   collection_name: "arxiv_papers"
 
 ```
@@ -452,9 +403,7 @@ The application is configured using YAML files in the `config/` directory. The d
 Key configuration options:
 
 ## Recent Feature Additions
-
 ### 1. MongoDB Tracking for Qdrant Vector Processing
-
 * The sync_qdrant pipeline now includes a tracking system to prevent duplicate processing and provide synchronization with Qdrant:
 
 ```yaml
@@ -462,15 +411,10 @@ Key configuration options:
 # In config/default.yaml
 
 qdrant:
-
   # ... other settings ...
-
   tracking:
-
     enabled: true # Whether to track processed PDFs
-
     collection_name: "vector_processed_pdfs" # MongoDB collection to store tracking information
-
     sync_with_qdrant: true # Whether to sync tracking with actual Qdrant contents
 
 ```
@@ -479,11 +423,9 @@ qdrant:
 - 
 
 ### 2. GPU Acceleration for Vector Operations
-
 The pipeline now supports GPU acceleration for both:
 
 #### A. Qdrant Vector Database
-
 ```yaml
 # In config/default.yaml
 qdrant:
@@ -494,9 +436,7 @@ qdrant:
 
 #### B. Standalone Qdrant with GPU
 For better performance with large vector collections, you can run Qdrant as a standalone application with GPU support as documented in the "Qdrant Deployment Options" section.
-
 ---
-
 ## Ollama Integration (Optional)
 
 The `sync_qdrant` pipeline uses [Ollama](https://ollama.ai/) app for analyzing images extracted from PDFs if available:
@@ -507,7 +447,7 @@ The `sync_qdrant` pipeline uses [Ollama](https://ollama.ai/) app for analyzing i
 - **Required model**: Run `ollama pull llama3` to download the required model
 - **Without Ollama**: The pipeline still functions normally without Ollama, but image descriptions will be placeholders
 
-## ArXiv Pipeline Configuration Settings
+## NEW PROJECT NAME Configuration Settings
 
 The system is configured through `config/default.yaml`. Key configuration sections included
 
@@ -522,27 +462,6 @@ When running the `sync_qdrant` service in Docker, the PDF directory path specifi
 volumes:
   - E:/AI Research:/app/data/pdfs  # Maps Windows path to container path
 ```
-
-This means:
-- Your PDFs should be stored in `E:/AI Research` on your Windows machine
-- Inside the Docker container, they will be accessible at `/app/data/pdfs`
-- The script automatically detects when running in Docker and adjusts paths accordingly
-
-If you change your PDF storage location, make sure to update both:
-1. The `pdf_storage.directory` in `config/default.yaml` (for local runs)
-2. The volume mapping in `docker-compose.yml` (for Docker runs)
-   ## sync_mongodb pipeline
-
-   - 
-
-   ## sync_neo4j pipeline
-
-   - 
-
-   ## sync_qdrant pipeline
-
-   - 
-
 Config changes take effect when services are restarted. See `docs/system_design.md` for detailed information about configuration impact on system behavior.
 
 ## Qdrant Deployment Options
@@ -743,17 +662,12 @@ The following features are 'planned' for future development to enhance the resea
 ## To-Do List
 - [ ] **Short-term Tasks**
   - [ ] Optimize PDF download with parallel processing
-
 - [ ] **Medium-term Tasks**
   - [ ] Fine-tuning pipelines for specific use cases
-
 - [ ] **Long-term Tasks**
   - [ ] Build a recommendation system for related papers
-
 - [ ] **Infrastructure Tasks**
   - [ ] Add Prometheus/Grafana for monitoring
-
----
 
 ---
 For more details about project and status, see the `docs/` directory.
