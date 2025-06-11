@@ -46,7 +46,7 @@
 - Update @tech_stack.md when you use a new library or tool
 
 ## Environment & Development
-- Developer is always working from a venv environment with powershell commands
+- Developer is always working from a python venv environment with powershell commands
 - Support both Docker-based deployment and local Python execution
 - Always maintain configuration in YAML files (config/default.yaml)
 - Support environment variable overrides for configuration values

@@ -7,10 +7,8 @@ A modular, fully local, open-source
 | Feature                  | Description |
 | ------------------------ |-------------|
 | 🏠 **Local-first** | Everything runs offline with no cloud dependencies on local network with multi machine support. |
-| 💾 **ArXiv Ingestion** | Fetches non-duplicate papers from configurable categories (e.g., cs.AI) with smart date filtering. |
+| 💾 **Data Ingestion** | Fetches non-duplicate papers from configurable categories (e.g., cs.AI) with smart date filtering. |
 | 🗒 **MongoDB Storage** | Stores structured metadata, paper information, and download statuses. |
-| 🐙 **Graph Representation** | Neo4j graph database captures relationships between papers, authors, and categories. |
-| 🤖 **LLM Category Summary** | Uses LLMs to categorize papers by subject, architecture, and mathematical models. |
 | 💡 **Semantic Embeddings** | Creates vector embeddings using Hugging Face models, stored in Qdrant for similarity search. |
 | 🔧 **Configurable & Modular** | Centralized settings allow switching categories, models, and components. |
 | 👀 **User Interface** | User-friendly interface for exploring datasets, knowledge graphs, and similarity search. |
@@ -57,7 +55,6 @@ For more deep dive into project and status, see the `docs/` directory.
 ### AI-Assisted Research
 - **Paper Summarization**: Generate concise summaries of complex research papers
 - **Research Agent**: Add specific research agents for specific use cases
-- **Fine-tuning**: Fine-tune pipelines for specific use cases
 
 ### Education & Learning
 - **Personalized Learning Paths**: Create sequential reading lists for specific AI topics
@@ -93,11 +90,16 @@ source .venv/bin/activate
 
 ## Windows (PowerShell):
 ```powershell
+# Remove previous venv if it exists
+Remove-Item -Recurse -Force venv
+# Create new venv
+py -3.11 -m venv venv
+python --version
 # Run the setup script
-.\scripts\setup_uv.ps1
+# ??
 
 # Activate the virtual environment
-.venv\Scripts\Activate.ps1
+venv\Scripts\Activate.ps1
 ```
 
 # Dockerized Deployment - Docker Desktop Running
@@ -264,9 +266,6 @@ c. **Start the development server**:
 
 ## 7. Data Visualization and Analysis Dashboards
 
-### Paper Analysis Dashboard
-The ArXiv Pipeline includes an interactive Paper Analysis Dashboard that provides visual insights into publication trends and patterns. This dashboard is accessible through the MongoDB Reports section of the web interface.
-
 **Key Features:**
 - **Time-based Analysis**: View paper publication trends by year, month, or day
 - **Multi-dimensional Filtering**: Filter papers by date range, specific year, and research category
@@ -275,11 +274,8 @@ The ArXiv Pipeline includes an interactive Paper Analysis Dashboard that provide
 **How to Access:**
 1. Navigate to the web UI (http://localhost:3000) when services are running
 2. Click on "MongoDB Reports" in the navigation menu
-3. Use the filter options to refine your analysis
 
 ## 8. Data Validation and Analysis Utilities
-
-The NEW PROJECT NAME includes comprehensive data validation and analysis utilities in `src/agents_core/logging_utils.py`. These utilities help ensure data quality, perform temporal analysis, and validate MongoDB collections.
 
 ### Data Integrity Checking
 ```python
@@ -290,8 +286,6 @@ The NEW PROJECT NAME includes comprehensive data validation and analysis utiliti
 ```python
 
 ```
-
-These utilities help maintain data quality and provide insights into the ArXiv paper collection. They can be used for monitoring, debugging, and generating reports.
 
 ## 9. Managing Individual Docker Containers
 * For more fine-grained control over system components, you can start, stop, restart, and inspect specific containers:
@@ -310,21 +304,16 @@ docker compose start neo4j
 
 ```bash
 # Restart MongoDB
-
 docker compose restart mongodb
 
 # Restart Neo4j
-
 docker compose restart neo4j
 
 # View MongoDB logs
-
 docker compose logs mongodb
-
 docker compose logs web-ui
 
 # Follow logs (real-time updates)
-
 docker compose logs --follow mongodb
 
 ```
@@ -333,11 +322,7 @@ docker compose logs --follow mongodb
 
 ```bash
 # Check status of all containers
-
 docker compose ps
-
-# Detailed information about a specific container
-
 ```
 
 ## 6. Optional: GPU-Accelerated Qdrant Setup on Remote Windows Machine
@@ -383,7 +368,7 @@ c. **Integration with NEW PROJECT NAME**:
 
 ```yaml
 
-# In config/default.yaml
+# In config/config.yaml
 
 qdrant:
   host: "192.168.1.x"  # Replace with your Qdrant server's IP
@@ -408,15 +393,12 @@ Key configuration options:
 
 ```yaml
 
-# In config/default.yaml
+# In config/config.yaml
 
 qdrant:
   # ... other settings ...
   tracking:
     enabled: true # Whether to track processed PDFs
-    collection_name: "vector_processed_pdfs" # MongoDB collection to store tracking information
-    sync_with_qdrant: true # Whether to sync tracking with actual Qdrant contents
-
 ```
 
 ### This system:
@@ -427,7 +409,7 @@ The pipeline now supports GPU acceleration for both:
 
 #### A. Qdrant Vector Database
 ```yaml
-# In config/default.yaml
+# In config/config.yaml
 qdrant:
   # ... other settings ...
   gpu_enabled: true # Enable GPU for vector operations
@@ -449,11 +431,11 @@ The `sync_qdrant` pipeline uses [Ollama](https://ollama.ai/) app for analyzing i
 
 ## NEW PROJECT NAME Configuration Settings
 
-The system is configured through `config/default.yaml`. Key configuration sections included
+The system is configured through `config/config.yaml`. Key configuration sections included
 
 ### Important Note About PDF Paths in Docker
 
-When running the `sync_qdrant` service in Docker, the PDF directory path specified in `config/default.yaml` is overridden by the volume mapping in `docker-compose.yml`:
+When running the `sync_qdrant` service in Docker, the PDF directory path specified in `config/config.yaml` is overridden by the volume mapping in `docker-compose.yml`:
 
 ```yaml
 
@@ -521,9 +503,6 @@ app:
 ```
 
 ## GPU Support for Embeddings Generation
-
-* The pipeline can use GPU acceleration for generating embeddings in the `sync_qdrant.py` script:
-
 1. **Install PyTorch with CUDA support**:
 ```bash
 
@@ -535,7 +514,7 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 
 2. **Enable GPU in configuration**:
 ```yaml
-# In config/default.yaml
+# In config/config.yaml
 qdrant:
   gpu_enabled: true  # Enable GPU for vector operations
   gpu_device: 0      # GPU device index (0 for first GPU)
@@ -647,28 +626,17 @@ The following features are 'planned' for future development to enhance the resea
 - **PDF Section Parsing**: Intelligently extract structured sections from research papers (abstract, methods, results, etc.)
 - **Citation Parsing**: Extract and normalize citations from paper references
 - **Mathematical Model Extraction**: Identify and extract mathematical formulas and models from papers
-- **Citation Graph Analysis**: Build a graph of paper citations to identify seminal works
-- **Researcher Networks**: Map collaboration networks among authors
-- **Multi-Modal Analysis**: Extract and analyze figures and tables from papers
-- **Fine-tuning Pipelines**: Fine-tune pipelines for specific use cases
-- **Research Agents**: Add specific research agents for specific use cases
 
 ### Infrastructure Improvements
 - **LangChain-based Research Assistant**: Natural language interface to query the database
 - **Hybrid Search**: Combine keyword and semantic search for better results
 - **Export Tools**: Add BibTeX and PDF collection exports
-- **Web Admin Interface**: Add web admin interface for configuration and running pipelines
 
 ## To-Do List
 - [ ] **Short-term Tasks**
   - [ ] Optimize PDF download with parallel processing
 - [ ] **Medium-term Tasks**
   - [ ] Fine-tuning pipelines for specific use cases
-- [ ] **Long-term Tasks**
-  - [ ] Build a recommendation system for related papers
-- [ ] **Infrastructure Tasks**
-  - [ ] Add Prometheus/Grafana for monitoring
-
 ---
 For more details about project and status, see the `docs/` directory.
 

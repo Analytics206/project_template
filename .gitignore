@@ -5,7 +5,7 @@ __pycache__/
 *.pyd
 
 # Environment
-ENV/
+env/
 venv/
 
 # Data
