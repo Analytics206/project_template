@@ -1,7 +1,7 @@
 # Project Charter
 
 ## Project Name
-[Your Project Name]
+NEW PROJECT NAME
 
 ## Project Summary
 A high-level overview of the project, its goals, and context.

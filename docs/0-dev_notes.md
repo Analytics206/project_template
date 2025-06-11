@@ -1,6 +1,6 @@
 # NEW PROJECT NAME Development Notes
 
-## This document contains developer notes and reminders for ongoing work on the ArXiv pipeline project.
+## This document contains developer notes and reminders for ongoing work on the NEW PROJECT NAME project.
 
 ## To-Do Items
 
@@ -14,7 +14,7 @@
 
 ### System monitoring with Prometheus/Grafana
 
-The ArXiv pipeline project now includes a comprehensive monitoring solution using Prometheus and Grafana to track system and container metrics.
+The NEW PROJECT NAME now includes a comprehensive monitoring solution using Prometheus and Grafana to track system and container metrics.
 
 #### Overview
 
@@ -35,7 +35,7 @@ This monitoring stack consists of:
 
 2. **Starting the Monitoring Stack**
    ```bash
-   # Start the main ArXiv pipeline services
+   # Start the main NEW PROJECT NAME services
    docker-compose up -d
    
    # Start the monitoring stack
@@ -52,7 +52,7 @@ This monitoring stack consists of:
 
 4. **Adding Custom Metrics**
    
-   To expose custom metrics from the ArXiv pipeline application:
+   To expose custom metrics from the NEW PROJECT NAME application:
    
    ```python
    from prometheus_client import Counter, Gauge, start_http_server

@@ -2,7 +2,7 @@
 
 ## System Architecture Overview
 
-The ArXiv Research Pipeline is built on a microservices architecture using Docker containers with the following components:
+The NEW PROJECT NAME is built on a microservices architecture using Docker containers with the following components:
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
