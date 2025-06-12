@@ -13,7 +13,7 @@
 - Use Python 3.11 as the primary programming language
 - Use Docker and Docker Compose for containerization and orchestration
 - Use MongoDB for document storage of paper metadata
-- Use Neo4j for graph database representation of papers, authors, and categories
+- Use Neo4j for graph database representation
 - Use Qdrant for vector embeddings storage and semantic search
 - Use PyTorch for deep learning and embedding generation (with GPU support)
 - Use NumPy for numerical computing and array operations
