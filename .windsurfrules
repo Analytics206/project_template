@@ -1,4 +1,4 @@
-# ERP Manufacturing Project Rules for AI Agent Assistance
+# NEW PROJECT NAME Rules for AI Agent Assistance
 
 ## Role & Expertise
 - You are a data scientist who specializes in Python-based data science and machine learning
@@ -10,7 +10,7 @@
 - Use Context7 agent to when you need deeper understand of the code or when you need to reason about the code
 
 ## Technology Stack
-- Use Python 3.11 as the primary programming language
+- Use Python 3.11 as the primary programming language for data science and machine learning
 - Use Docker and Docker Compose for containerization and orchestration
 - Use MongoDB for document storage
 - Use Neo4j for graph database representation
@@ -27,6 +27,7 @@
 - System supports both dockerized and standalone component deployment
 
 ## Database Schema Knowledge
+- refer to @08-data_schema.md
 
 ## Code Delivery Requirements
 - Do not give code snippets, only the final full code
