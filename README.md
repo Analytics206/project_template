@@ -37,7 +37,7 @@ A modular, fully local, open-source
 
 ---
 ## 🧵 High Level Overview
- - Fetch metadata of papers from arXiv.org using arXiv Atom XML API
+ - Fetch metadata of papers from Project.org using Project Atom XML API
  - Store normalized metadata in MongoDB with pdf_url for pdf download
 
 For more deep dive into project and status, see the `docs/` directory.
@@ -111,14 +111,14 @@ venv\Scripts\Activate.ps1
     # or to rebuild
     docker compose up -d --build api
    ```
- - ✔ Network arxiv_pipeline_default         Started     
- - ✔ Container arxiv_pipeline-neo4j-1       Started     
+ - ✔ Network Project_pipeline_default         Started     
+ - ✔ Container Project_pipeline-neo4j-1       Started     
 
 
 ## 2. Managing Pipeline Service Containers
    * pipelines do not have to run in order if you have previously run them or starting where you left off
    * manual services (Jupyter, Kafka, etc.) are only started when needed with the `--profile manual` flag
-  ### a. Run sync_mongodb pipeline to fetch papers from ArXiv API and store in MongoDB:
+  ### a. Run sync_mongodb pipeline to fetch papers from Project API and store in MongoDB:
   ```bash
   # Run the sync-mongodb pipeline container
   docker compose up --build sync-mongodb
@@ -160,9 +160,7 @@ c. **Explore metrics** for:
 d. **Monitoring Dashboards**
    Pre-configured Grafana dashboards are available in the repository:
    - `config/grafana/dashboards/basic_test_dashboard.json` - Basic connectivity testing dashboard
-   - `config/grafana/dashboards/arxiv_data_science_dashboard.json` - Core monitoring for ArXiv pipeline
-   - `config/grafana/dashboards/arxiv_advanced_analytics_dashboard.json` - Advanced system correlation metrics
-   - `config/grafana/dashboards/arxiv_vector_embedding_dashboard.json` - Vector database performance metrics
+   - `config/grafana/dashboards/Project_data_science_dashboard.json` - Core  database performance metrics
 
    * These dashboards provide visualization for MongoDB operations, system resources, container performance, 
    and vector embedding generation metrics critical for the research paper processing pipeline.
@@ -170,9 +168,7 @@ d. **Monitoring Dashboards**
 e. **Prometheus Query Documentation**
    Comprehensive documentation for Prometheus queries is available in:
    - `docs/prometheus_basic_queries.md` - Simple queries for troubleshooting
-   - `docs/prometheus_queries.md` - General purpose monitoring queries
-   - `docs/prometheus_custom_queries.md` - ArXiv pipeline specific metrics
-   - `docs/prometheus_working_queries.md` - Verified working queries for dashboards
+dashboards
 
 f. **Monitoring Diagnostics**
    Use the diagnostic script to verify your monitoring setup:
@@ -180,7 +176,7 @@ f. **Monitoring Diagnostics**
    python scripts/check_prometheus_metrics.py
    ```
    * This script analyzes your Prometheus setup and verifies that critical metrics
-   for the ArXiv pipeline are available and functioning correctly.
+   for the Project pipeline are available and functioning correctly.
 
 * Refer to `docs/grafana_dashboard_guide.md` for details on customizing and extending these dashboards.**
 
@@ -220,7 +216,7 @@ docker compose --profile manual down zookeeper kafka kafka-ui
 ```yaml
 mongo:
   connection_string: "mongodb://mongodb:27017/" # or http://localhost:27017
-  db_name: "arxiv_papers"
+  db_name: "Project_papers"
   
 neo4j:
   url: "bolt://neo4j:7687"  # or http://localhost:7474
@@ -229,12 +225,11 @@ neo4j:
 
 qdrant:
   url: "http://localhost:6333" #Access Qdrant UI http://localhost:6333/dashboard
-  collection_name: "arxiv_papers"
+  collection_name: "Project_papers"
 
 # Qdrant API Metrics
 # The database dashboard displays the following Qdrant metrics:
-# - Papers: Number of vector embeddings stored in Qdrant (paper count)
-# - Authors: Vector dimensions (typically 768 for research paper embeddings)
+# - 
   vector_size: 768  # For all-MiniLM-L6-v2 model
 ```
 ## 6. Web UI
@@ -373,7 +368,7 @@ c. **Integration with NEW PROJECT NAME**:
 qdrant:
   host: "192.168.1.x"  # Replace with your Qdrant server's IP
   port: 6333
-  collection_name: "arxiv_papers"
+  collection_name: "Project_papers"
 
 ```
 
@@ -425,7 +420,7 @@ The `sync_qdrant` pipeline uses [Ollama](https://ollama.ai/) app for analyzing i
 - **What Ollama does**: Enhances the vector database by adding AI-generated descriptions of diagrams and figures in papers
 - **Installation Options**:
   - **Desktop App**: Download and install Ollama from [ollama.ai](https://ollama.ai/)
-  - **Docker Container**: Run Ollama in a Docker container for easier integration with the ArXiv pipeline (see `docs/ollama_docker.md` for detailed instructions)
+  - **Docker Container**: Run Ollama in a Docker container for easier integration with the Project pipeline (see `docs/ollama_docker.md` for detailed instructions)
 - **Required model**: Run `ollama pull llama3` to download the required model
 - **Without Ollama**: The pipeline still functions normally without Ollama, but image descriptions will be placeholders
 
@@ -541,7 +536,7 @@ The Docker setup includes MongoDB, so no additional installation is needed if us
    ```python
    from pymongo import MongoClient
    client = MongoClient('mongodb://localhost:27017/')
-   db = client['arxiv_papers']
+   db = client['Project_papers']
    print(f"Connected to MongoDB: {client.server_info()['version']}")
    ```
 
